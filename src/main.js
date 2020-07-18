@@ -21,7 +21,8 @@ function connect (config) {
     let conn = mysql.createConnection({
         host: config.host,
         user: config.user,
-        password: config.password
+        password: config.password,
+        multipleStatements: true
     });
     conn.connect(function (err) {
         if (err) throw err;

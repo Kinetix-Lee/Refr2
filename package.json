@@ -1,0 +1,20 @@
+{
+    "name": "refr2",
+    "version": "1.0.0b",
+    "description": "A simple link shortener, written in Node.js. ",
+    "license": "GPL3.0",
+    "homepage": "https://x86.app/projects/Refr2",
+    "author": {
+        "name": "kinetix_",
+        "email": "lee@x86.app",
+        "url": "https://about.x86.app"
+    },
+    "bugs": "https://github.com/Kinetix-Lee/Refr2/issues",
+    "repository": "github:Kinetix-Lee/Refr2",
+    "main": "src/main.js",
+    "dependencies": {
+        "mysql": "~2"
+    },
+    "type": "module",
+    "private": "true"
+}

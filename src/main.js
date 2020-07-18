@@ -97,5 +97,4 @@ const r2 = {
     }
 };
 
-//export {r2};
-r2.init(true);
+export {r2};

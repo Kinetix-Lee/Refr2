@@ -1,11 +1,12 @@
 'use strict';
-import mysql from 'mysql';
+import * as mysql from 'mysql';
 
 // Edit this constant to decide how Refr2 interacts with MySQL server. 
-const SQL = {
+const SQL : MySQLCredentials = {
     host: 'localhost',
     user: 'Refr2',
     password: 'Refr2',
+    port: 3306,
     database: 'Refr2',
     table: 'Refr2'
 };
@@ -15,61 +16,71 @@ const REFR2 = {
     credits: 'Kinetix'
 };
 
-let sql;
+let sql: string;
 
-function connect (config) {
+interface MySQLCredentials {
+    host: string,
+    user: string,
+    password: string,
+    port: number,
+    database: string,
+    table: string
+};
+
+function connect (config: MySQLCredentials) : any {
     let conn = mysql.createConnection({
         host: config.host,
         user: config.user,
         password: config.password,
+        port: config.port,
         multipleStatements: true
     });
-    conn.connect(function (err) {
+    conn.connect(function (err: any) {
         if (err) throw err;
     });
     return conn;
 };
 
-const r2 = {
-    create: function (name, target, username=NULL) {
+class r2 {
+    create (name: string, target: string, username = null) : Object {
         let conn = connect(SQL);
 
         sql = 'INSERT INTO `' + SQL.table + '` ' + 
-            '(`name`, `target`' + (username === NULL ? '' : ', `username`') + ') ' + 
-            'VALUES (\"' + name + '\", \"' + target + '\"' + (username === NULL ? '' : ', \"' + username + '\"') + ')';
+            '(`name`, `target`' + (username === null ? '' : ', `username`') + ') ' + 
+            'VALUES (\"' + name + '\", \"' + target + '\"' + (username === null ? '' : ', \"' + username + '\"') + ')';
 
-        conn.query(sql, function (err) {
+        conn.query(sql, function (err: any) {
             if (err) throw err;
             conn.destroy();
         });
         return this;
-    }, 
-    remove: function (key, byName=false) {
+    };
+    remove (key: string, byName: boolean = false) : Object {
         let conn = connect(SQL);
 
-        if (byName) sql = 'DELETE FROM `' + SQL.table + '` WHERE `name`=' + key;
+        if (byName) sql = 'DELETE FROM `' + SQL.table + '` WHERE `name`=\"' + key + '\"';
         else sql = 'DELETE FROM `' + SQL.table + '` WHERE `id`=' + key;
 
-        conn.query(sql, function (err) {
+        conn.query(sql, function (err: any) {
             if (err) throw err;
             conn.destroy();
         });
         return this;
-    },
-    resolve: function (key, byId=false) {
+    };
+    resolve (key: string, byId: boolean = false) : Object {
         let conn = connect(SQL);
 
-        if (!byId) sql = 'SELECT FROM `' + SQL.table + '` WHERE `name`=' + key;
+        if (!byId) sql = 'SELECT FROM `' + SQL.table + '` WHERE `name`=\"' + key + '\"';
         else sql = 'SELECT FROM `' + SQL.table + '` WHERE `id`=' + key;
 
-        conn.query(sql, function (err, results) {
+        conn.query(sql, function (err: any, results: any) {
             if (err) throw err;
             return results[0];
         });
         conn.destroy();
         return this;
-    },
-    init: function (initDb = false) {
+    };
+    init (initDb: boolean = false) : Object {
         const db = 'CREATE DATABASE `' + SQL.database + '`;';
         const table = 'USE `' + SQL.database + '`;\
         CREATE TABLE `' + SQL.table + '` (\
@@ -77,7 +88,7 @@ const r2 = {
             `name` varchar(32) COLLATE utf8_bin NOT NULL,\
             `target` varchar(1024) COLLATE utf8_bin NOT NULL,\
             `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\
-            `uid` int(11) DEFAULT NULL\
+            `uid` int(11) DEFAULT null\
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;\
         ALTER TABLE `' + SQL.table + '`\
             ADD PRIMARY KEY (`id`),\
@@ -90,12 +101,12 @@ const r2 = {
         if (initDb) sql = db + table;
         else sql = table;
 
-        conn.query(sql, function (err) {
+        conn.query(sql, function (err: any) {
             if (err) throw err;
             conn.destroy();
         });
         return this;
-    }
+    };
 };
 
-export {r2};
+export {r2 as Refr2};

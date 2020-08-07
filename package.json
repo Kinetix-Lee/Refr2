@@ -13,6 +13,7 @@
     "repository": "github:Kinetix-Lee/Refr2",
     "main": "src/main.js",
     "dependencies": {
+        "@types/mysql": "^2.15.15",
         "mysql": "~2"
     },
     "type": "module",

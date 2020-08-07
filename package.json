@@ -11,7 +11,7 @@
     },
     "bugs": "https://github.com/Kinetix-Lee/Refr2/issues",
     "repository": "github:Kinetix-Lee/Refr2",
-    "main": "src/main.js",
+    "main": "build/main.js",
     "dependencies": {
         "@types/mysql": "^2.15.15",
         "mysql": "~2"
